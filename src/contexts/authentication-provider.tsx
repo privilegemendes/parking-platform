@@ -6,8 +6,8 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useAndRequireContext } from '~/hooks/use-and-require-context.ts';
-import { wait } from '~/lib/utils.ts';
+import { useAndRequireContext } from '~/hooks/use-and-require-context';
+import { wait } from '~/lib/utils';
 
 interface Props {
   children: ReactNode;
