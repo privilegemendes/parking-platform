@@ -1,36 +1,30 @@
-import * as React from 'react';
-import { Link, Outlet, createRootRoute } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { AuthContext } from "~/contexts/authentication-provider";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { TailwindIndicator } from "~/components/ui/tailwind-indicator";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  auth: AuthContext;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
 });
 
 function RootComponent() {
   return (
     <>
-      <div className="p-2 flex gap-2 text-lg">
-        <Link
-          to="/"
-          activeProps={{
-            className: 'font-bold',
-          }}
-          activeOptions={{ exact: true }}
-        >
-          Home
-        </Link>{' '}
-        <Link
-          to="/about"
-          activeProps={{
-            className: 'font-bold',
-          }}
-        >
-          About
-        </Link>
-      </div>
-      <hr />
-      <Outlet />
-      <TanStackRouterDevtools position="bottom-right" />
+      <Inner />
+      <TailwindIndicator />
+      <TanStackRouterDevtools position="bottom-left" />
     </>
+  );
+}
+
+function Inner() {
+  return (
+    <div>
+      <Outlet />
+    </div>
   );
 }

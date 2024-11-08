@@ -1,9 +1,9 @@
-import { Context, useContext, useMemo } from 'react';
+import { Context, useContext, useMemo } from "react";
 
 export function useAndRequireContext<T>(
   context: Context<T | undefined>,
-  objectName: string = 'hook',
-  providerName: string = 'provider'
+  objectName: string = "hook",
+  providerName: string = "provider"
 ): T {
   const possiblyUndefinedContext = useContext(context);
   return useMemo(() => {

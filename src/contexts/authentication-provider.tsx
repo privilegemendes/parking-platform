@@ -5,9 +5,9 @@ import {
   useCallback,
   useEffect,
   useState,
-} from 'react';
-import { useAndRequireContext } from '~/hooks/use-and-require-context';
-import { wait } from '~/lib/utils';
+} from "react";
+import { useAndRequireContext } from "~/hooks/use-and-require-context";
+import { wait } from "~/lib/utils";
 
 interface Props {
   children: ReactNode;
@@ -36,8 +36,8 @@ export type AuthResponse = {
 const ContextRef = createContext<AuthContext | undefined>(undefined);
 
 function getAuthToken() {
-  const token = localStorage.getItem('token');
-  const expiration = localStorage.getItem('token_expiration');
+  const token = localStorage.getItem("token");
+  const expiration = localStorage.getItem("token_expiration");
   if (token && expiration && Date.now() < Number(expiration)) {
     return token;
   }
@@ -47,11 +47,11 @@ function getAuthToken() {
 function storeAuthToken(token: string | null, expiresIn: number | null) {
   if (token && expiresIn) {
     const expirationTime = Date.now() + expiresIn * 1000; // expiresIn is in seconds
-    localStorage.setItem('token', token);
-    localStorage.setItem('token_expiration', expirationTime.toString());
+    localStorage.setItem("token", token);
+    localStorage.setItem("token_expiration", expirationTime.toString());
   } else {
-    localStorage.removeItem('token');
-    localStorage.removeItem('token_expiration');
+    localStorage.removeItem("token");
+    localStorage.removeItem("token_expiration");
   }
 }
 
@@ -69,7 +69,7 @@ export const AuthenticationProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (authToken) {
-      const expiration = localStorage.getItem('token_expiration');
+      const expiration = localStorage.getItem("token_expiration");
       const timeLeft = expiration ? Number(expiration) - Date.now() : 0;
 
       if (timeLeft > 0) {
@@ -88,12 +88,12 @@ export const AuthenticationProvider: FC<Props> = ({ children }) => {
 
   const login = useCallback(async (email: string, password: string) => {
     try {
-      const response: Response = await fetch('/v1/auth/password', {
-        method: 'POST',
+      const response: Response = await fetch("/v1/auth/password", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -107,7 +107,7 @@ export const AuthenticationProvider: FC<Props> = ({ children }) => {
         });
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   }, []);
 
