@@ -7,6 +7,7 @@ import {
   AuthenticationProvider,
   useAuth,
 } from "~/contexts/authentication-provider";
+import { QueryProvider } from "~/contexts/query-provider";
 
 // Set up a Router instance
 const router = createRouter({
@@ -36,7 +37,9 @@ function InnerApp() {
 function App() {
   return (
     <AuthenticationProvider>
-      <InnerApp />
+      <QueryProvider>
+        <InnerApp />
+      </QueryProvider>
     </AuthenticationProvider>
   );
 }
