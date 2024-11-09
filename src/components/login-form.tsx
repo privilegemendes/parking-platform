@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "~/lib/utils";
 import { useAuth } from "~/contexts/authentication-provider";
-import { LoginFormType, loginSchema } from "~/types/auth";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { loginWithPasswordDto, LoginWithPasswordDto } from "~/types/user";
 
 type Props = HTMLAttributes<HTMLDivElement>;
 
@@ -24,11 +24,11 @@ export const LoginForm: FC<Props> = ({ className, ...props }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormType>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginWithPasswordDto>({
+    resolver: zodResolver(loginWithPasswordDto),
   });
 
-  const onSubmit = async (data: LoginFormType) => {
+  const onSubmit = async (data: LoginWithPasswordDto) => {
     try {
       setIsLoading(true); // Start loading spinner
       await login(data.email, data.password);

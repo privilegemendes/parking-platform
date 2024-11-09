@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useAndRequireContext } from "~/hooks/use-and-require-context";
 import { wait } from "~/lib/utils";
+import { userResponse } from "~/types/user";
 
 interface Props {
   children: ReactNode;
@@ -18,19 +19,6 @@ export type AuthContext = {
   authToken: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
-};
-
-export type AuthResponse = {
-  data: {
-    user: {
-      id: string;
-      email: string;
-    };
-    auth: {
-      accessToken: string;
-      expiresIn: number;
-    };
-  };
 };
 
 const ContextRef = createContext<AuthContext | undefined>(undefined);
@@ -98,8 +86,9 @@ export const AuthenticationProvider: FC<Props> = ({ children }) => {
       });
 
       if (response.ok) {
-        const data: AuthResponse = await response.json();
-        const { accessToken, expiresIn } = data.data.auth;
+        const data = await response.json();
+        const parsedData = userResponse.parse(data.data);
+        const { accessToken, expiresIn } = parsedData.auth;
 
         await wait(500).then(() => {
           setAuthToken(accessToken);
