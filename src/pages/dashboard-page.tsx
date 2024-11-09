@@ -2,6 +2,7 @@ import { useAuth } from "~/contexts/authentication-provider";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Logo } from "~/components/ui/logo";
+import { ParkingSessionsTable } from "~/components/parking-sessions/parking-sessions-table";
 
 export default function DashboardPage() {
   const { logout } = useAuth();
@@ -21,7 +22,9 @@ export default function DashboardPage() {
             <TabsTrigger value="financials">Financials</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4"></TabsContent>
-          <TabsContent value="parking-logs" className="space-y-4"></TabsContent>
+          <TabsContent value="parking-logs" className="space-y-4">
+            <ParkingSessionsTable />
+          </TabsContent>
           <TabsContent value="financials" className="space-y-4"></TabsContent>
         </Tabs>
       </div>
