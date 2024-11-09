@@ -1,8 +1,19 @@
-import { parkingSessionsListResponse } from "~/types/parking-session";
+import {
+  endParkingSessionRequest,
+  EndParkingSessionRequest,
+  parkingSessionEndedResponse,
+  parkingSessionsListResponse,
+  parkingSessionStartedResponse,
+  startParkingSessionRequest,
+  StartParkingSessionRequest,
+} from "~/types/parking-session";
+import { authHeaders } from "~/lib/utils";
+import { useAuth } from "~/contexts/authentication-provider";
+import { useMutation } from "@tanstack/react-query";
 
 const GET_SESSIONS_LIST_API = "/v1/parking/sessions/list";
-const POST_START_SESSION_API = "/v1/parking/sessions/start";
-const POST_END_SESSION_API = "/v1/parking/sessions/end";
+const POST_START_SESSION_API = "/v1/parking/session/start";
+const POST_END_SESSION_API = "/v1/parking/session/end";
 
 export async function getParkingSessions(
   token: string | null,
@@ -10,13 +21,6 @@ export async function getParkingSessions(
   limit: number
 ) {
   try {
-    // const url = new URL(SESSIONS_API_URL);
-    // url.searchParams.append("offset", offset.toString());
-    // if (limit) url.searchParams.append("limit", limit.toString());
-    // if (isSessionEnded)
-    //   url.searchParams.append("isSessionEnded", isSessionEnded.toString());
-    // if (vehicleType) url.searchParams.append("vehicleType", vehicleType);
-
     if (!token) {
       throw new Error("No token provided");
     }
@@ -25,10 +29,7 @@ export async function getParkingSessions(
       `${GET_SESSIONS_LIST_API}?offset=${offset}&limit=${limit}`,
       {
         method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders(token),
       }
     );
 
@@ -47,7 +48,10 @@ export async function getParkingSessions(
   }
 }
 
-export const startSession = async (token: string | null, vehicleId: string) => {
+export const startSession = async (
+  token: string | null,
+  payload: StartParkingSessionRequest
+) => {
   try {
     if (!token) {
       throw new Error("No token provided");
@@ -55,14 +59,12 @@ export const startSession = async (token: string | null, vehicleId: string) => {
 
     const response = await fetch(POST_START_SESSION_API, {
       method: "POST",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ vehicleId }),
+      headers: authHeaders(token),
+      credentials: "include",
+      body: JSON.stringify(payload),
     });
 
+    console.log("response", response);
     if (!response.ok) {
       throw new Error(
         `Failed to start parking session: ${response.statusText}`
@@ -70,14 +72,17 @@ export const startSession = async (token: string | null, vehicleId: string) => {
     }
 
     const data = await response.json();
-    return data.data;
+    return parkingSessionStartedResponse.parse(data.data);
   } catch (error) {
     console.error("Error in startSession:", error);
     throw error;
   }
 };
 
-export const endSession = async (token: string | null, sessionId: string) => {
+export const endSession = async (
+  token: string | null,
+  payload: EndParkingSessionRequest
+) => {
   try {
     if (!token) {
       throw new Error("No token provided");
@@ -85,12 +90,8 @@ export const endSession = async (token: string | null, sessionId: string) => {
 
     const response = await fetch(POST_END_SESSION_API, {
       method: "POST",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionId }),
+      headers: authHeaders(token),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -98,9 +99,27 @@ export const endSession = async (token: string | null, sessionId: string) => {
     }
 
     const data = await response.json();
-    return data.data;
+    return parkingSessionEndedResponse.parse(data.data);
   } catch (error) {
     console.error("Error in endSession:", error);
     throw error;
   }
+};
+
+export const useStartSession = () => {
+  const { authToken } = useAuth();
+  return useMutation({
+    mutationKey: ["startSession"],
+    mutationFn: (payload: StartParkingSessionRequest) =>
+      startSession(authToken, startParkingSessionRequest.parse(payload)),
+  });
+};
+
+export const useEndSession = () => {
+  const { authToken } = useAuth();
+  return useMutation({
+    mutationKey: ["endSession"],
+    mutationFn: (payload: EndParkingSessionRequest) =>
+      endSession(authToken, endParkingSessionRequest.parse(payload)),
+  });
 };
