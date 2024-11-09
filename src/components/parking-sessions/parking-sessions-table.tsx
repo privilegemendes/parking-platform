@@ -4,12 +4,8 @@ import { DataTable } from "~/components/data-table/data-table";
 import { parkingSessionsColumns } from "~/components/parking-sessions/parking-sessions-columns";
 
 export const ParkingSessionsTable: FC = () => {
-  const {
-    data: parkingSessions,
-    isLoading: isParkingSessionsLoading,
-    dataUpdatedAt: parkingSessionsUpdatedAt,
-    refetch: refetchParkingSessions,
-  } = useParkingSessions();
+  const { data: parkingSessions, isLoading: isParkingSessionsLoading } =
+    useParkingSessions();
 
   if (isParkingSessionsLoading || !parkingSessions) {
     return <div>Loading</div>;
