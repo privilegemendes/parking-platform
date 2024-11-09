@@ -1,15 +1,17 @@
 import { parkingSpacesListResponse } from "~/types/parking-space";
+import { authHeaders } from "~/lib/utils";
 
 const SPACES_API = "/v1/parking/spaces/list";
 
 export async function getParkingSpaces(token: string | null, offset: number) {
+  if (!token) {
+    throw new Error("No token provided");
+  }
+
   try {
     const response = await fetch(`${SPACES_API}?offset=${offset}`, {
       method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: authHeaders(token),
     });
 
     if (!response.ok) {
