@@ -4,7 +4,11 @@ const GET_SESSIONS_LIST_API = "/v1/parking/sessions/list";
 const POST_START_SESSION_API = "/v1/parking/sessions/start";
 const POST_END_SESSION_API = "/v1/parking/sessions/end";
 
-export async function getParkingSessions(token: string | null, offset: number) {
+export async function getParkingSessions(
+  token: string | null,
+  offset: number,
+  limit: number
+) {
   try {
     // const url = new URL(SESSIONS_API_URL);
     // url.searchParams.append("offset", offset.toString());
@@ -18,7 +22,7 @@ export async function getParkingSessions(token: string | null, offset: number) {
     }
 
     const response = await fetch(
-      `${GET_SESSIONS_LIST_API}?offset=${offset}&limit=300`,
+      `${GET_SESSIONS_LIST_API}?offset=${offset}&limit=${limit}`,
       {
         method: "GET",
         headers: {
