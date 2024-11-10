@@ -59,12 +59,12 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
       {
         name: "Occupied",
         value: Math.abs(parkingSpace.occupancy),
-        fill: "#f13838",
+        fill: "var(--chart-1)",
       },
       {
         name: "Capacity",
         value: parkingSpace.capacity,
-        fill: "#11df22",
+        fill: "var(--chart-2)",
       },
     ];
   }, [parkingSpace]);
@@ -125,14 +125,14 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
 const chartConfig = {
   motor: {
     label: "Non-Resident (Motorcycles)",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
   car: {
     label: "Non-Resident (Cars)",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
   residents: {
     label: "Residents",
-    color: "hsl(var(--chart-5))",
+    color: "var(--chart-5)",
   },
 } satisfies ChartConfig;

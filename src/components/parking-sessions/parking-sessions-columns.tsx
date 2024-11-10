@@ -114,7 +114,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Vehicle Type" />
     ),
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center w-[40px]">
         <VehicleType vehicleType={row.getValue("vehicleType")} />
       </div>
     ),

@@ -5,6 +5,7 @@ import { Logo } from "~/components/ui/logo";
 import { ParkingSessionsTable } from "~/components/parking-sessions/parking-sessions-table";
 import { ParkingSpaces } from "~/components/parking-spaces/parking-spaces";
 import { CreateSession } from "~/components/create-session/create-session";
+import { CapacityAreaChart } from "~/components/parking-sessions/capacity-area-chart";
 
 export default function DashboardPage() {
   const { logout } = useAuth();
@@ -28,6 +29,7 @@ export default function DashboardPage() {
           </div>
           <TabsContent value="overview" className="space-y-4">
             <ParkingSpaces />
+            <CapacityAreaChart />
           </TabsContent>
           <TabsContent value="parking-logs" className="space-y-4">
             <ParkingSessionsTable />
