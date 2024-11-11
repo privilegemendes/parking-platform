@@ -1,15 +1,41 @@
 import { FC } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 interface Props {
   vehicleType: string;
 }
+
 export const VehicleType: FC<Props> = ({ vehicleType }) => {
+  let iconSrc = "";
+  let altText = "";
+
   switch (vehicleType) {
     case "MOTOR":
-      return <img src="/MOTOR.svg" alt="Motorcycle" className="h-10 w-10" />;
     case "MOTORCYCLE":
-      return <img src="/MOTOR.svg" alt="Motorcycle" className="h-10 w-10" />;
+      iconSrc = "/MOTOR.svg";
+      altText = "Motorcycle";
+      break;
     case "CAR":
-      return <img src="/CAR.svg" alt="Car" className="h-10 w-10" />;
+      iconSrc = "/CAR.svg";
+      altText = "Car";
+      break;
   }
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <img src={iconSrc} alt={altText} className="h-10 w-10" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{altText}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
