@@ -1,14 +1,15 @@
 import { useParkingSpaces } from "~/hooks/use-parking-spaces";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "~/components/ui/chart";
+import { ChartConfig, ChartContainer } from "~/components/ui/chart";
 import { FC, useMemo } from "react";
-import { Label, Pie, PieChart } from "recharts";
+import {
+  Label,
+  PolarGrid,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+} from "recharts";
 import { ParkingSpaceRowDto } from "~/types/parking-space";
 
 export const ParkingSpaces = () => {
@@ -20,21 +21,23 @@ export const ParkingSpaces = () => {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <Card className="grid gap-4 md:grid-cols-3">
       {parkingSpaces.map((space) => (
-        <Card key={space.parkingSpaceId}>
+        <div key={space.parkingSpaceId}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {getLabel(space.vehicleType)}
             </CardTitle>
-            <Badge>{space.isOccupied ? "Full" : "Available"}</Badge>
+            <Badge variant={space.isOccupied ? "destructive" : "success"}>
+              {space.isOccupied ? "Full" : "Available"}
+            </Badge>
           </CardHeader>
           <CardContent>
             <Chart parkingSpace={space} />
           </CardContent>
-        </Card>
+        </div>
       ))}
-    </div>
+    </Card>
   );
 };
 
@@ -46,9 +49,9 @@ interface Props {
 const getLabel = (vehicleType: string | null) => {
   switch (vehicleType) {
     case "MOTOR":
-      return "Non Resident - Motorcycles";
+      return "Visitors Motorcycles";
     case "CAR":
-      return "Non Resident - Cars";
+      return "Visitors Cars";
     default:
       return "Residents";
   }
@@ -59,12 +62,7 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
       {
         name: "Occupied",
         value: Math.abs(parkingSpace.occupancy),
-        fill: "var(--chart-1)",
-      },
-      {
-        name: "Capacity",
-        value: parkingSpace.capacity,
-        fill: "var(--chart-2)",
+        fill: "#FF4560",
       },
     ];
   }, [parkingSpace]);
@@ -76,17 +74,24 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="mx-auto aspect-square max-h-[250px]"
+      className="mx-auto aspect-square max-h-[150px]"
     >
-      <PieChart>
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Pie
-          data={chartData}
-          dataKey="value"
-          nameKey="name"
-          innerRadius={60}
-          strokeWidth={5}
-        >
+      <RadialBarChart
+        data={chartData}
+        startAngle={0}
+        endAngle={(parkingSpace.occupancy / parkingSpace.capacity) * 360}
+        innerRadius={55}
+        outerRadius={75}
+      >
+        <PolarGrid
+          gridType="circle"
+          radialLines={false}
+          stroke="none"
+          className="first:fill-muted last:fill-background"
+          polarRadius={[60, 50]}
+        />
+        <RadialBar dataKey="value" background cornerRadius={10} />
+        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
           <Label
             content={({ viewBox }) => {
               if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -100,9 +105,11 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
                     <tspan
                       x={viewBox.cx}
                       y={viewBox.cy}
-                      className="fill-foreground text-3xl font-bold"
+                      className="fill-foreground text-2xl font-bold"
                     >
-                      {totalSpaces}
+                      {chartData[0].value.toLocaleString()}
+                      {"/"}
+                      {parkingSpace.capacity}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
@@ -116,8 +123,8 @@ const Chart: FC<Props> = ({ parkingSpace }) => {
               }
             }}
           />
-        </Pie>
-      </PieChart>
+        </PolarRadiusAxis>
+      </RadialBarChart>
     </ChartContainer>
   );
 };

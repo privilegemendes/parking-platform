@@ -26,6 +26,7 @@ export const truncateSessionId = (sessionId: string) => {
   return `${start}...${end}`;
 };
 
+// Utility to format the duration as "N days, N hours" or just "N hours" if less than a day
 export const formatDuration = (minutes: number): string => {
   const days = Math.floor(minutes / (60 * 24));
   const hours = Math.floor((minutes % (60 * 24)) / 60);
@@ -36,10 +37,20 @@ export const formatDuration = (minutes: number): string => {
   }
 
   if (days > 0) {
-    return `${days} day${days > 1 ? "s" : ""}`;
+    return hours > 0
+      ? `${days} day${days > 1 ? "s" : ""}, ${hours} hour${hours > 1 ? "s" : ""}`
+      : `${days} day${days > 1 ? "s" : ""}`;
   } else if (hours > 0) {
     return `${hours} hour${hours > 1 ? "s" : ""}`;
   } else {
     return `${remainingMinutes} min${remainingMinutes > 1 ? "s" : ""}`;
   }
 };
+
+export function getParkingSpaceType(parkingSpaceId: number): string {
+  if (parkingSpaceId === 1) {
+    return "Resident";
+  } else {
+    return "Visitor";
+  }
+}

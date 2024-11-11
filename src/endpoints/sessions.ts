@@ -64,14 +64,12 @@ export const startSession = async (
       body: JSON.stringify(payload),
     });
 
-    console.log("response", response);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to start parking session: ${response.statusText}`
-      );
+    if (response.status === 412) {
+      throw new Error("Parking space is full");
     }
 
     const data = await response.json();
+    console.log(data.data);
     return parkingSessionStartedResponse.parse(data.data);
   } catch (error) {
     console.error("Error in startSession:", error);
