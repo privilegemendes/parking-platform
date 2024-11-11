@@ -1,16 +1,27 @@
 import { ParkingSessionRowDto } from "~/types/parking-session";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, RowData } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header";
 import { Badge } from "~/components/ui/badge";
 import { format } from "date-fns";
 import { ParkingSessionStatus } from "~/components/parking-sessions/parking-session-status";
-import { formatDuration, truncateSessionId } from "~/lib/utils";
+import {
+  formatDuration,
+  getParkingSpaceType,
+  truncateSessionId,
+} from "~/lib/utils";
 import { VehicleType } from "~/components/vehicle-type";
+
+// Extend the ColumnMeta interface to include the hidden and title properties
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    hidden?: boolean;
+    title?: string;
+  }
+}
 
 export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
   {
     accessorKey: "parkingSessionId",
-    // id: "Session ID",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Session ID" />
     ),
@@ -21,6 +32,10 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
     ),
     enableSorting: false,
     enableHiding: true,
+    meta: {
+      hidden: true,
+      title: "Session ID",
+    },
   },
   {
     accessorKey: "parkingSpaceId",
@@ -28,7 +43,9 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Space ID" />
     ),
     cell: ({ row }) => {
-      const parkingSpaceId = getParkingSpaceType(row);
+      const parkingSpaceId = getParkingSpaceType(
+        row.getValue("parkingSpaceId")
+      );
       return (
         <div className="w-[60px]">
           <Badge
@@ -90,7 +107,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Duration" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">
+      <div className="w-[80px] text-xs">
         {formatDuration(row.getValue("sessionLengthInHoursMinutes"))}
       </div>
     ),
@@ -114,7 +131,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Vehicle Type" />
     ),
     cell: ({ row }) => (
-      <div className="flex items-center w-[40px]">
+      <div className="flex items-center justify-center">
         <VehicleType vehicleType={row.getValue("vehicleType")} />
       </div>
     ),
@@ -127,7 +144,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const statusValue = String(row.getValue("isSessionEnded"));
+      const statusValue = Boolean(row.getValue("isSessionEnded"));
       const parkingSessionId = String(row.getValue("parkingSessionId"));
       return (
         <ParkingSessionStatus
@@ -146,12 +163,12 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
 
 export const parkingSessionsStatuses = [
   {
-    value: "true",
+    value: true,
     label: "Completed",
     icon: "🛑",
   },
   {
-    value: "false",
+    value: false,
     label: "Active",
     icon: "🟢",
   },
@@ -174,26 +191,15 @@ export const vehicleTypes = [
 
 export const parkingSpacesTypes = [
   {
-    value: "1",
+    value: 1,
     label: "Resident",
   },
   {
-    value: "2",
-    label: "Visitor",
+    value: 2,
+    label: "Visitor Car",
   },
   {
-    value: "3",
-    label: "Visitor",
+    value: 3,
+    label: "Visitor Motorcycle",
   },
 ];
-
-function getParkingSpaceType(row: {
-  getValue: (key: string) => number;
-}): string {
-  const parkingSpaceId = row.getValue("parkingSpaceId");
-  if (parkingSpaceId === 1) {
-    return "Resident";
-  } else {
-    return "Visitor";
-  }
-}

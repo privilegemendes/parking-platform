@@ -8,7 +8,7 @@ import { useParkingSessions } from "~/hooks/use-parking-sessions";
 import { Badge } from "~/components/ui/badge";
 
 interface Props {
-  statusValue: string;
+  statusValue: boolean;
   parkingSessionId: string;
 }
 
@@ -54,7 +54,7 @@ export const ParkingSessionStatus: FC<Props> = ({
 
   return (
     <div className="flex gap-4 w-[40px] items-center">
-      {status.value === "true" ? (
+      {status.value ? (
         <Badge variant="success">
           <span>{status.label}</span>
         </Badge>
