@@ -28,10 +28,12 @@ import {
 import { VehicleTypeSelector } from "~/components/create-session/vehicle-type-selector";
 import { Switch } from "~/components/ui/switch";
 import { useParkingSessions } from "~/hooks/use-parking-sessions";
+import { useParkingSpaces } from "~/hooks/use-parking-spaces";
 
 export function CreateSession() {
   const startSession = useStartSession();
-  const { refetch } = useParkingSessions();
+  const { refetch: refetchSessions } = useParkingSessions();
+  const { refetch: refetchSpaces } = useParkingSpaces();
 
   const form = useForm<StartParkingSessionRequest>({
     resolver: zodResolver(startParkingSessionRequest),
@@ -46,11 +48,12 @@ export function CreateSession() {
 
   const onStartSession = async (payload: StartParkingSessionRequest) => {
     try {
-      await startSession.mutateAsync(payload).then(() => {
-        refetch();
+      await startSession.mutateAsync(payload).then((response) => {
+        refetchSessions();
+        refetchSpaces();
         toast({
           title: "New Session Created",
-          description: "started to create session",
+          description: `started to create session ${response.startedSession.parkingSpaceId}`,
         });
       });
     } catch (error) {

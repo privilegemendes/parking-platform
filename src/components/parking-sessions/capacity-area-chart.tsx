@@ -22,8 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useState } from "react";
-import { useParkingSessions } from "~/hooks/use-parking-sessions";
+import { FC, useState } from "react";
 import { format } from "date-fns";
 import { ParkingSessionRowDto } from "~/types/parking-session";
 
@@ -41,16 +40,19 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CapacityAreaChart() {
-  const [timeRange, setTimeRange] = useState("90d");
-  const { data, isLoading: isParkingSessionsLoading } = useParkingSessions();
+interface Props {
+  data?: ParkingSessionRowDto[];
+  isLoading: boolean;
+}
 
-  if (isParkingSessionsLoading || !data) {
+export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
+  const [timeRange, setTimeRange] = useState("90d");
+
+  if (isLoading || !data) {
     return <div>Loading</div>;
   }
 
   const parkingSessions = transformParkingSessions(data);
-  console.log(parkingSessions);
 
   const filteredData = parkingSessions.filter((item) => {
     const date = new Date(item.date);
@@ -74,7 +76,7 @@ export function CapacityAreaChart() {
   });
 
   return (
-    <Card>
+    <Card className="col-span-2">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Visitors</CardTitle>
@@ -189,7 +191,7 @@ export function CapacityAreaChart() {
       </CardContent>
     </Card>
   );
-}
+};
 
 type ChartData = {
   date: string;

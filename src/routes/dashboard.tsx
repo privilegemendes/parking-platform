@@ -32,7 +32,7 @@ function Dashboard() {
   }, [isAuthenticated, navigate, router]);
 
   return (
-    <div className="">
+    <div className="h-screen overflow-hidden">
       <DashboardPage />
     </div>
   );
