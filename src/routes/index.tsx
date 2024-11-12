@@ -18,5 +18,5 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  return <div className="h-screen">"Welcome to Hartje Parking!"</div>;
+  return <div>"Welcome to Hartje Parking!"</div>;
 }
