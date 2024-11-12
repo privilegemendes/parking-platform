@@ -26,7 +26,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Session ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[60px] text-xs">
+      <div className=" text-xs">
         {truncateSessionId(row.getValue("parkingSessionId"))}
       </div>
     ),
@@ -47,15 +47,24 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
         row.getValue("parkingSpaceId")
       );
       return (
-        <div className="w-[60px]">
-          <Badge
-            variant={parkingSpaceId === "Resident" ? "outline" : "default"}
-          >
-            {parkingSpaceId}
-          </Badge>
-        </div>
+        <Badge variant={parkingSpaceId === "Resident" ? "outline" : "default"}>
+          {parkingSpaceId}
+        </Badge>
       );
     },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "vehicleType",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Vehicle Type" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex w-full items-center">
+        <VehicleType vehicleType={row.getValue("vehicleType")} />
+      </div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -67,7 +76,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
     cell: ({ row }) => {
       const sessionStartedAt: string = row.getValue("sessionStartedAt");
       return (
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col w-full space-y-1">
           <span className="text-xs">
             {sessionStartedAt ? format(sessionStartedAt, "PP") : "-"}
           </span>
@@ -88,7 +97,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
     cell: ({ row }) => {
       const sessionEndedAt: string = row.getValue("sessionEndedAt");
       return (
-        <div className="flex flex-col space-y-1">
+        <div className="flex flex-col w-full space-y-1">
           <span className="text-xs">
             {sessionEndedAt ? format(sessionEndedAt, "PP") : "-"}
           </span>
@@ -107,11 +116,11 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="Duration" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px] text-xs">
+      <div className="text-xs">
         {formatDuration(row.getValue("sessionLengthInHoursMinutes"))}
       </div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -120,20 +129,7 @@ export const parkingSessionsColumns: ColumnDef<ParkingSessionRowDto>[] = [
       <DataTableColumnHeader column={column} title="License" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">{row.getValue("vehicleLicensePlate")}</div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "vehicleType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Vehicle Type" />
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <VehicleType vehicleType={row.getValue("vehicleType")} />
-      </div>
+      <div className="">{row.getValue("vehicleLicensePlate")}</div>
     ),
     enableSorting: false,
     enableHiding: false,

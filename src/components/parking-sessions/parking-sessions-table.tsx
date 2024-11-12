@@ -12,7 +12,7 @@ export const ParkingSessionsTable: FC = () => {
   }
 
   return (
-    <div>
+    <div className="overflow-hidden h-screen px-4">
       <DataTable data={parkingSessions} columns={parkingSessionsColumns} />
     </div>
   );

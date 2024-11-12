@@ -53,7 +53,7 @@ export const ParkingSessionStatus: FC<Props> = ({
   }
 
   return (
-    <div className="flex gap-4 w-[40px] items-center">
+    <div className="flex gap-4 w-full items-center justify-center">
       {status.value ? (
         <Badge variant="success">
           <span>{status.label}</span>
