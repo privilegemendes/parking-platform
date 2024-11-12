@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -10,8 +10,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
@@ -76,7 +74,7 @@ export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
   });
 
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-3 lg:col-span-2">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Visitors</CardTitle>
@@ -113,35 +111,9 @@ export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[200px] w-full"
         >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillCar" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-CAR)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-CAR)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMotor" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-MOTOR)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-MOTOR)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
+          <BarChart accessibilityLayer data={filteredData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -159,34 +131,11 @@ export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
             />
             <ChartTooltip
               cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    });
-                  }}
-                  indicator="dot"
-                />
-              }
+              content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Area
-              dataKey="MOTOR"
-              type="natural"
-              fill="url(#fillMotor)"
-              stroke="var(--color-MOTOR)"
-              stackId="a"
-            />
-            <Area
-              dataKey="CAR"
-              type="natural"
-              fill="url(#fillCar)"
-              stroke="var(--color-CAR)"
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
+            <Bar dataKey="CAR" fill="var(--color-CAR)" radius={4} />
+            <Bar dataKey="MOTOR" fill="var(--color-MOTOR)" radius={4} />
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
