@@ -21,7 +21,7 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-1 flex-col gap-4 lg:flex-row items-center space-x-2">
         <Input
           placeholder="Search License Plate..."
           value={
@@ -34,39 +34,41 @@ export function DataTableToolbar<TData>({
               .getColumn("vehicleLicensePlate")
               ?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="h-8 w-full lg:w-[250px] xl:w-[500px]"
         />
-        {table.getColumn("parkingSpaceId") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("parkingSpaceId")}
-            title="Parking Space"
-            options={parkingSpacesTypes}
-          />
-        )}
-        {table.getColumn("isSessionEnded") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("isSessionEnded")}
-            title="Status"
-            options={parkingSessionsStatuses}
-          />
-        )}
-        {table.getColumn("vehicleType") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("vehicleType")}
-            title="Vehicle Type"
-            options={vehicleTypes}
-          />
-        )}
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <Cross2Icon className="ml-2 h-4 w-4" />
-          </Button>
-        )}
+        <div className="flex gap-4">
+          {table.getColumn("parkingSpaceId") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("parkingSpaceId")}
+              title="Parking Space"
+              options={parkingSpacesTypes}
+            />
+          )}
+          {table.getColumn("isSessionEnded") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("isSessionEnded")}
+              title="Status"
+              options={parkingSessionsStatuses}
+            />
+          )}
+          {table.getColumn("vehicleType") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("vehicleType")}
+              title="Vehicle Type"
+              options={vehicleTypes}
+            />
+          )}
+          {isFiltered && (
+            <Button
+              variant="ghost"
+              onClick={() => table.resetColumnFilters()}
+              className="h-8 px-2 lg:px-3"
+            >
+              Reset
+              <Cross2Icon className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
       <DataTableViewOptions table={table} />
     </div>

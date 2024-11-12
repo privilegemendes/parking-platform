@@ -94,36 +94,40 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
-      <div
-        ref={tableContainerRef}
-        className="overflow-auto relative h-[800px] pb-4"
-      >
-        <Table className="grid">
-          <TableHeader className="grid sticky top-0 z-10">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="flex items-center w-full"
-              >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="flex items-center w-full"
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
+
+      <Table className="grid">
+        <TableHeader className="grid z-10">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+              key={headerGroup.id}
+              className="flex items-center justify-center"
+            >
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead
+                    key={header.id}
+                    className="flex items-center"
+                    colSpan={header.colSpan}
+                    style={{
+                      width: header.column.getSize(),
+                    }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <div
+          ref={tableContainerRef}
+          className="overflow-auto relative h-[800px] pb-4"
+        >
           <TableBody
             style={{
               display: "grid",
@@ -142,6 +146,7 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     style={{
                       display: "flex",
+                      justifyContent: "center",
                       width: "100%",
                       position: "absolute",
                       transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
@@ -151,7 +156,7 @@ export function DataTable<TData, TValue>({
                       return (
                         <TableCell
                           key={cell.id}
-                          className="flex w-full items-center justify-center"
+                          className="flex items-center"
                           style={{
                             width: cell.column.getSize(),
                           }}
@@ -177,8 +182,9 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </Table>
-      </div>
+        </div>
+      </Table>
+
       {/* When virtualizing, the pagination component is not needed*/}
       {/*<DataTablePagination table={table} />*/}
     </div>

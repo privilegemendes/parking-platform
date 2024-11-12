@@ -111,7 +111,7 @@ export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[200px] w-full"
+          className="aspect-auto h-[350px] w-full"
         >
           <BarChart accessibilityLayer data={filteredData}>
             <CartesianGrid vertical={false} />
