@@ -18,11 +18,11 @@ export const SessionHistory: FC<Props> = ({ data, isLoading }) => {
   const filteredData = getLongestActiveSessions(data);
 
   return (
-    <Card className="col-span-1">
+    <Card className="col-span-3 lg:col-span-1">
       <CardHeader>
-        <CardTitle>Longest active sessions</CardTitle>
+        <CardTitle>Active sessions</CardTitle>
       </CardHeader>
-      <div className="overflow-y-scroll p-6 h-[280px]">
+      <div className="overflow-y-scroll p-6 h-[450px]">
         <div className="flex flex-col gap-4">
           {filteredData.map((session, index) => (
             <div key={index} className="flex items-center">
@@ -69,6 +69,5 @@ const getLongestActiveSessions = (data: ParkingSessionRowDto[]) => {
       parkingSpaceId: getParkingSpaceType(session.parkingSpaceId),
       calculatedDuration: calculateDuration(session.sessionStartedAt),
     }))
-    .sort((a, b) => b.calculatedDuration - a.calculatedDuration)
-    .slice(0, 10); // Return only the top 10
+    .sort((a, b) => b.calculatedDuration - a.calculatedDuration);
 };
