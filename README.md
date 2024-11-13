@@ -5,7 +5,6 @@
 - [Tech Stack](#tech-stack)
 - [Approach](#approach)
 - [Features](#features)
-- [Codebase Structure](#codebase-structure)
 - [Codebase Optimization](#codebase-optimization)
 - [Possible Frontend Improvements](#possible-frontend-improvements)
 - [Backend API Improvements](#backend-api-improvements)
@@ -38,15 +37,6 @@
 - [x] Bar chart to visualize parking occupancy over the past year 
 - [x] Total revenue generated from parking sessions
 - [x] Toast component for displaying success and error messages, and notifications
-
-## Codebase Structure
-The codebase is structured as follows:
-- `src/components`: Contains the tree component and its subcomponents
-- `src/hooks`: Contains custom hooks for managing tree state and search functionality
-- `src/utils`: Contains utility functions for tree traversal and search
-- `src/data`: Contains the mock data for the tree
-- `src/styles`: Contains global styles and CSS variables (Tailwind CSS)
-- `src/App.tsx`: Main application component
 
 ## Codebase Optimization
 - The codebase used Eslint and prettier for code formatting and linting.
