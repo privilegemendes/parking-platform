@@ -37,6 +37,7 @@
 - [x] Dashboard with available parking spaces
 - [x] Bar chart to visualize parking occupancy over the past year 
 - [x] Total revenue generated from parking sessions
+- [x] Toast component for displaying success and error messages, and notifications
 
 ## Codebase Structure
 The codebase is structured as follows:
@@ -52,6 +53,8 @@ The codebase is structured as follows:
 
 ## Possible Frontend Improvements
 - Improve the dashboard for improved mobile friendliness. This will help the parking operators to manage the parking spaces on the go.
+- Add error boundaries to catch errors in the application and display a fallback UI.
+- Add a loading spinner to indicate that the data is being fetched if skeleton loading is not possible.
 
 # Backend API Improvements
 - The occupancy value should be non-negative integer.
