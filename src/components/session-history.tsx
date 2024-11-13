@@ -22,7 +22,7 @@ export const SessionHistory: FC<Props> = ({ data, isLoading }) => {
       <CardHeader>
         <CardTitle>Active sessions</CardTitle>
       </CardHeader>
-      <div className="overflow-y-scroll p-6 h-[450px]">
+      <div className="overflow-y-scroll px-6 mb-6 max-h-[calc(100svh-36rem)]">
         <div className="flex flex-col gap-4">
           {filteredData.map((session, index) => (
             <div key={index} className="flex items-center">

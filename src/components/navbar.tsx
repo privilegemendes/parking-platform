@@ -7,7 +7,7 @@ export const Navbar = () => {
   return (
     <div className="flex items-center h-16 px-4 mb-4 border-b gap-4">
       <Logo />
-      <div className="hidden p-2 lg:flex gap-2">
+      <div className="hidden p-2 md:flex gap-2">
         <Link to="/dashboard" className="text-sm [&.active]:font-bold">
           Overview
         </Link>
