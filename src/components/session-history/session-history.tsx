@@ -20,10 +20,10 @@ export const SessionHistory: FC<Props> = ({ data, isLoading }) => {
 
   return (
     <Card className="col-span-3 lg:col-span-1">
-      <CardHeader>
-        <CardTitle>Active sessions</CardTitle>
+      <CardHeader className="">
+        <CardTitle>Top 5 Active sessions</CardTitle>
       </CardHeader>
-      <div className="overflow-y-scroll px-6 mb-6 max-h-[calc(100svh-36rem)]">
+      <div className="px-6 mb-6">
         <div className="flex flex-col gap-4">
           {filteredData.map((session, index) => (
             <div key={index} className="flex items-center">

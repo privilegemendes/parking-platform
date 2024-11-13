@@ -13,7 +13,7 @@ export default function DashboardPage() {
     useParkingSpaces();
 
   return (
-    <div className="flex flex-col gap-4 px-4 mb-4">
+    <div className="flex flex-col gap-4 px-4 mb-4 overflow-y-scroll h-screen">
       <ParkingSpaces data={parkingSpaces} isLoading={isParkingSpacesLoading} />
       <Finances data={parkingSessions} isLoading={isParkingSessionsLoading} />
       <div className="gap-4 grid lg:grid-cols-3">

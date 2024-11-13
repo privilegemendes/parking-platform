@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <div
           ref={tableContainerRef}
-          className="overflow-auto relative h-[800px] pb-4"
+          className="overflow-auto relative max-h-[calc(100svh-10rem)] pb-4"
         >
           <TableBody
             style={{

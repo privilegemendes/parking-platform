@@ -55,7 +55,7 @@ export const Finances: FC<Props> = ({ data, isLoading }) => {
             align: "center",
             dragFree: true,
           }}
-          className="w-full mt-6"
+          className="w-full"
         >
           <CarouselContent>
             {revenueCards.map((card, index) => (

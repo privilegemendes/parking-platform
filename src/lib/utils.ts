@@ -151,5 +151,6 @@ export const getLongestActiveSessions = (data: ParkingSessionRowDto[]) => {
       parkingSpaceId: getParkingSpaceType(session.parkingSpaceId),
       calculatedDuration: calculateDuration(session.sessionStartedAt),
     }))
-    .sort((a, b) => b.calculatedDuration - a.calculatedDuration);
+    .sort((a, b) => b.calculatedDuration - a.calculatedDuration)
+    .slice(0, 5);
 };
