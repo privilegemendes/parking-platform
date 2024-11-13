@@ -2,32 +2,50 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ParkingSessionRowDto } from "~/types/parking-session";
 
+/**
+ * Utility to merge Tailwind classes with conditional class support.
+ * @param inputs - Class values to merge.
+ * @returns A merged class string.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function wait(ms: number) {
+/**
+ * Creates a delay for a specified amount of milliseconds.
+ * @param ms - Milliseconds to wait.
+ * @returns A promise that resolves after the specified delay.
+ */
+export async function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Generates authorization headers for API requests.
+ * @param accessToken - Access token for authorization.
+ * @returns An object with authorization and content-type headers.
+ */
 export const authHeaders = (accessToken: string) => ({
   Authorization: `Bearer ${accessToken}`,
   "Content-Type": "application/json",
-  accept: "application/json",
+  Accept: "application/json",
 });
 
-export const truncateSessionId = (sessionId: string) => {
-  if (sessionId.length <= 12) return sessionId;
+/**
+ * Truncates a session ID to show the first 4 and last 4 characters, with ellipses in between if longer than 12 characters.
+ * @param sessionId - The session ID string to truncate.
+ * @returns A truncated session ID string.
+ */
+export const truncateSessionId = (sessionId: string): string =>
+  sessionId.length <= 12
+    ? sessionId
+    : `${sessionId.slice(0, 4)}...${sessionId.slice(-4)}`;
 
-  // Get the first 8 characters and the last 8 characters
-  const start = sessionId.slice(0, 4);
-  const end = sessionId.slice(-4);
-
-  // Combine them with ellipsis
-  return `${start}...${end}`;
-};
-
-// Utility to format the duration as "N days, N hours" or just "N hours" if less than a day
+/**
+ * Formats a duration given in minutes into a human-readable string.
+ * @param minutes - Duration in minutes.
+ * @returns A formatted string in "N days, N hours, N mins" format.
+ */
 export const formatDuration = (minutes: number): string => {
   const days = Math.floor(minutes / (60 * 24));
   const hours = Math.floor((minutes % (60 * 24)) / 60);
@@ -48,15 +66,21 @@ export const formatDuration = (minutes: number): string => {
   }
 };
 
+/**
+ * Determines the type of parking space based on its ID.
+ * @param parkingSpaceId - The parking space ID.
+ * @returns "Resident" for ID 1, "Visitor" otherwise.
+ */
 export function getParkingSpaceType(parkingSpaceId: number): string {
-  if (parkingSpaceId === 1) {
-    return "Resident";
-  } else {
-    return "Visitor";
-  }
+  return parkingSpaceId === 1 ? "Resident" : "Visitor";
 }
 
-export const getLabel = (vehicleType: string | null) => {
+/**
+ * Maps a vehicle type string to a descriptive label.
+ * @param vehicleType - The vehicle type ("MOTOR", "CAR", or null).
+ * @returns A descriptive label string based on vehicle type.
+ */
+export const getLabel = (vehicleType: string | null): string => {
   switch (vehicleType) {
     case "MOTOR":
       return "Visitors Motorcycles";
@@ -69,42 +93,63 @@ export const getLabel = (vehicleType: string | null) => {
 
 /**
  * Calculates total revenue, visitor cars revenue, and visitor motorcycles revenue, each rounded to two decimal places.
- * @param sessions Array of parking session objects.
+ * @param sessions - Array of parking session objects.
  * @returns An object with total revenue, visitor cars revenue, and visitor motorcycles revenue.
  */
 export function calculateRevenueBreakdown(sessions: ParkingSessionRowDto[]) {
-  const rateBySpaceId: { [key: number]: number } = {
-    2: 5.0, // €5.00 per hour for visitor cars (parkingSpaceId 2)
-    3: 3.0, // €3.00 per hour for visitor motorcycles (parkingSpaceId 3)
+  const rateBySpaceId: Record<number, number> = {
+    2: 5.0, // €5.00 per hour for visitor cars
+    3: 3.0, // €3.00 per hour for visitor motorcycles
   };
 
   let totalRevenue = 0;
   let visitorCarsRevenue = 0;
   let visitorsMotorRevenue = 0;
 
-  sessions.forEach((session) => {
-    if (
-      session.isSessionEnded &&
-      session.sessionLengthInHoursMinutes !== null
-    ) {
-      const hours = session.sessionLengthInHoursMinutes / 60;
-      const rate = rateBySpaceId[session.parkingSpaceId] || 0;
-      const revenue = hours * rate;
+  sessions.forEach(
+    ({ isSessionEnded, sessionLengthInHoursMinutes, parkingSpaceId }) => {
+      if (isSessionEnded && sessionLengthInHoursMinutes !== null) {
+        const hours = sessionLengthInHoursMinutes / 60;
+        const rate = rateBySpaceId[parkingSpaceId] || 0;
+        const revenue = hours * rate;
 
-      if (session.parkingSpaceId === 2) {
-        visitorCarsRevenue += revenue;
-      } else if (session.parkingSpaceId === 3) {
-        visitorsMotorRevenue += revenue;
+        if (parkingSpaceId === 2) visitorCarsRevenue += revenue;
+        else if (parkingSpaceId === 3) visitorsMotorRevenue += revenue;
+
+        totalRevenue += revenue;
       }
-
-      totalRevenue += revenue;
     }
-  });
+  );
 
   // Round each revenue value to two decimal places
   return {
-    totalRevenue: Math.round(totalRevenue * 100) / 100,
-    visitorCarsRevenue: Math.round(visitorCarsRevenue * 100) / 100,
-    visitorsMotorRevenue: Math.round(visitorsMotorRevenue * 100) / 100,
+    totalRevenue: +totalRevenue.toFixed(2),
+    visitorCarsRevenue: +visitorCarsRevenue.toFixed(2),
+    visitorsMotorRevenue: +visitorsMotorRevenue.toFixed(2),
   };
 }
+
+/**
+ * Retrieves a list of the longest active sessions, ordered by duration.
+ * @param data - Array of parking session objects.
+ * @returns Array of active sessions with calculated durations in descending order.
+ */
+export const getLongestActiveSessions = (data: ParkingSessionRowDto[]) => {
+  if (!data) return [];
+
+  const calculateDuration = (startDate: string): number => {
+    const start = new Date(startDate);
+    const now = new Date();
+    return (now.getTime() - start.getTime()) / (1000 * 60); // Convert to minutes
+  };
+
+  return data
+    .filter((session) => !session.isSessionEnded)
+    .map((session) => ({
+      vehicleLicensePlate: session.vehicleLicensePlate,
+      vehicleType: session.vehicleType,
+      parkingSpaceId: getParkingSpaceType(session.parkingSpaceId),
+      calculatedDuration: calculateDuration(session.sessionStartedAt),
+    }))
+    .sort((a, b) => b.calculatedDuration - a.calculatedDuration);
+};

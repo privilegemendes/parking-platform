@@ -23,6 +23,7 @@ import {
 import { FC, useState } from "react";
 import { format } from "date-fns";
 import { ParkingSessionRowDto } from "~/types/parking-session";
+import { ChartSkeleton } from "~/components/parking-sessions/chart-skeleton";
 
 const chartConfig = {
   visitors: {
@@ -47,7 +48,7 @@ export const CapacityAreaChart: FC<Props> = ({ data, isLoading }) => {
   const [timeRange, setTimeRange] = useState("90d");
 
   if (isLoading || !data) {
-    return <div>Loading</div>;
+    return <ChartSkeleton />;
   }
 
   const parkingSessions = transformParkingSessions(data);

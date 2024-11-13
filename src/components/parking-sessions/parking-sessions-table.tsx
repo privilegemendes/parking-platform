@@ -7,6 +7,7 @@ export const ParkingSessionsTable: FC = () => {
   const { data: parkingSessions, isLoading: isParkingSessionsLoading } =
     useParkingSessions();
 
+  //TODO: Make Loading Skeleton for table
   if (isParkingSessionsLoading || !parkingSessions) {
     return <div>Loading</div>;
   }

@@ -23,6 +23,7 @@ export default {
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
+          10: "rgba(30, 58, 138, 0.1)",
         },
         success: {
           DEFAULT: "var(--success)",

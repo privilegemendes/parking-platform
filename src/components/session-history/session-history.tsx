@@ -1,9 +1,10 @@
 import { ParkingSessionRowDto } from "~/types/parking-session";
 import { VehicleType } from "~/components/vehicle-type";
 import { FC } from "react";
-import { formatDuration, getParkingSpaceType } from "~/lib/utils";
+import { formatDuration, getLongestActiveSessions } from "~/lib/utils";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { SessionHistorySkeleton } from "~/components/session-history/session-history-skeleton";
 
 interface Props {
   data?: ParkingSessionRowDto[];
@@ -12,7 +13,7 @@ interface Props {
 
 export const SessionHistory: FC<Props> = ({ data, isLoading }) => {
   if (isLoading || !data) {
-    return <div>Loading</div>;
+    return <SessionHistorySkeleton />;
   }
 
   const filteredData = getLongestActiveSessions(data);
@@ -50,24 +51,4 @@ export const SessionHistory: FC<Props> = ({ data, isLoading }) => {
       </div>
     </Card>
   );
-};
-
-const getLongestActiveSessions = (data: ParkingSessionRowDto[]) => {
-  if (!data) return [];
-
-  const calculateDuration = (startDate: string): number => {
-    const start = new Date(startDate);
-    const now = new Date();
-    return (now.getTime() - start.getTime()) / (1000 * 60); // Convert to minutes
-  };
-
-  return data
-    .filter((session) => !session.isSessionEnded)
-    .map((session) => ({
-      vehicleLicensePlate: session.vehicleLicensePlate,
-      vehicleType: session.vehicleType,
-      parkingSpaceId: getParkingSpaceType(session.parkingSpaceId),
-      calculatedDuration: calculateDuration(session.sessionStartedAt),
-    }))
-    .sort((a, b) => b.calculatedDuration - a.calculatedDuration);
 };

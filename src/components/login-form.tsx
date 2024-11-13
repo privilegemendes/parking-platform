@@ -104,12 +104,7 @@ export const LoginForm: FC<Props> = ({ className, ...props }) => {
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}
-          <Button disabled={isLoading}>
-            {/*{isLoading && (*/}
-            {/*  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />*/}
-            {/*)}*/}
-            Sign In
-          </Button>
+          <Button disabled={isLoading}>Sign In</Button>
         </div>
       </form>
       <div className="relative">

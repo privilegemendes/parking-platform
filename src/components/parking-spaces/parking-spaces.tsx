@@ -10,6 +10,7 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import { useMediaQuery } from "~/hooks/use-mobile";
+import { ParkingSpaceSkeleton } from "~/components/parking-spaces/parking-space-skeleton";
 
 interface Props {
   data?: ParkingSpaceRowDto[];
@@ -20,7 +21,7 @@ export const ParkingSpaces: FC<Props> = ({ data, isLoading }) => {
   const isDesktop = useMediaQuery("md");
 
   if (isLoading || !data) {
-    return <div>Loading</div>;
+    return <ParkingSpaceSkeleton />;
   }
 
   return (
@@ -31,7 +32,7 @@ export const ParkingSpaces: FC<Props> = ({ data, isLoading }) => {
             align: "center",
             dragFree: true,
           }}
-          className="w-full mt-6"
+          className="w-full"
         >
           <CarouselContent>
             {data.map((space, idx) => (

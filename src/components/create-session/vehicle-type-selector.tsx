@@ -12,6 +12,8 @@ interface Props {
   onChange: (...event: never[]) => void;
   value: string;
 }
+
+//TODO: Make this reusable
 export const VehicleTypeSelector: FC<Props> = ({ onChange, value }) => {
   return (
     <Select onValueChange={onChange} defaultValue={value}>

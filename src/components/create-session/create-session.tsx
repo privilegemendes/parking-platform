@@ -52,15 +52,17 @@ export function CreateSession() {
         refetchSessions();
         refetchSpaces();
         toast({
-          title: "New Session Created",
-          description: `started to create session ${response.startedSession.parkingSpaceId}`,
+          title: text.toast.success.title,
+          description: text.toast.success.description(
+            response.startedSession.vehicleLicensePlate
+          ),
         });
       });
     } catch (error) {
       toast({
-        title: "Failed to create new session",
+        title: text.toast.error.title,
         variant: "destructive",
-        description: `${error}`,
+        description: text.toast.error.description(error),
       });
     }
   };
@@ -68,11 +70,11 @@ export function CreateSession() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Session</Button>
+        <Button variant="outline">{text.dialog.triggerButton}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Start a new parking session</DialogTitle>
+          <DialogTitle>{text.dialog.title}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <Form {...form}>
@@ -88,7 +90,7 @@ export function CreateSession() {
                 name="parkingSession.vehicleType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Vehicle Type</FormLabel>
+                    <FormLabel>{text.form.vehicleTypeLabel}</FormLabel>
                     <VehicleTypeSelector
                       onChange={field.onChange}
                       value={field.value}
@@ -102,12 +104,12 @@ export function CreateSession() {
                 name="parkingSession.vehicleLicensePlate"
                 render={({ field }) => (
                   <FormItem className="">
-                    <FormLabel>Vehicle License Plate</FormLabel>
+                    <FormLabel>{text.form.vehicleLicensePlateLabel}</FormLabel>
                     <FormControl>
                       <Input
                         className="mt-1"
                         {...field}
-                        placeholder={"PF-1234"}
+                        placeholder={text.form.vehicleLicensePlatePlaceholder}
                         aria-invalid={
                           form.formState.errors.parkingSession
                             ?.vehicleLicensePlate
@@ -132,7 +134,7 @@ export function CreateSession() {
                 name="parkingSession.isResident"
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between">
-                    <FormLabel>Resident</FormLabel>
+                    <FormLabel>{text.form.residentLabel}</FormLabel>
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
@@ -143,7 +145,7 @@ export function CreateSession() {
               />
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="submit">Create Session</Button>
+                  <Button type="submit">{text.form.submitButton}</Button>
                 </DialogClose>
               </DialogFooter>
             </form>
@@ -153,3 +155,27 @@ export function CreateSession() {
     </Dialog>
   );
 }
+
+const text = {
+  dialog: {
+    triggerButton: "Create Session",
+    title: "Start a new parking session",
+  },
+  form: {
+    vehicleTypeLabel: "Vehicle Type",
+    vehicleLicensePlateLabel: "Vehicle License Plate",
+    vehicleLicensePlatePlaceholder: "PF-1234",
+    residentLabel: "Resident",
+    submitButton: "Create Session",
+  },
+  toast: {
+    success: {
+      title: "New Session Created",
+      description: (text: string) => `New vehicle added License Plate: ${text}`,
+    },
+    error: {
+      title: "Failed to create new session",
+      description: (error: unknown) => `${error}`,
+    },
+  },
+};
