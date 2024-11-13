@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { parkingSessionsStatuses } from "~/components/parking-sessions/parking-sessions-columns";
 import { useParkingSessions } from "~/hooks/use-parking-sessions";
 import { Badge } from "~/components/ui/badge";
+import { formatDuration } from "~/lib/utils";
 
 interface Props {
   statusValue: boolean;
@@ -32,7 +33,7 @@ export const ParkingSessionStatus: FC<Props> = ({
         refetch();
         toast({
           title: "Session Completed",
-          description: `Duration: ${duration}`,
+          description: `Duration: ${formatDuration(duration)}`,
         });
       });
     } catch (error) {
