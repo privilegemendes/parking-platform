@@ -2,6 +2,7 @@ import { NavMenu } from "~/components/nav-menu";
 import { Link } from "@tanstack/react-router";
 import { CreateSession } from "~/components/create-session/create-session";
 import { Logo } from "~/components/ui/logo";
+import { ThemeToggle } from "~/components/theme-toggle";
 
 export const Navbar = () => {
   return (
@@ -16,6 +17,7 @@ export const Navbar = () => {
         </Link>
       </div>
       <div className="flex flex-1 gap-4 justify-end">
+        <ThemeToggle />
         <CreateSession />
         <NavMenu />
       </div>

@@ -8,6 +8,7 @@ import {
   useAuth,
 } from "~/contexts/authentication-provider";
 import { QueryProvider } from "~/contexts/query-provider";
+import { ThemeProvider } from "~/contexts/theme-provider";
 
 // Set up a Router instance
 const router = createRouter({
@@ -36,11 +37,13 @@ function InnerApp() {
 
 function App() {
   return (
-    <AuthenticationProvider>
-      <QueryProvider>
-        <InnerApp />
-      </QueryProvider>
-    </AuthenticationProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthenticationProvider>
+        <QueryProvider>
+          <InnerApp />
+        </QueryProvider>
+      </AuthenticationProvider>
+    </ThemeProvider>
   );
 }
 
